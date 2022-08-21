@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import InstagramIcon from '@mui/icons-material/Instagram';
 
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 
 import { signInWithEmailAndPassword,  setPersistence, browserSessionPersistence } from "firebase/auth";
 import { auth } from "../Env/Firebase";
@@ -109,7 +109,7 @@ const SignIn = () => {
                 <Grid item xs={12} style={{ marginTop: 40 }}>
                     <Button
                         variant="contained"
-                        style={{ width: 250, color: "white", height: 50 }}
+                        style={{ width: 250, color: "white", height: 40 }}
                         onClick={onClickSignIn}
                     >
                         <Typography variant="subtitle1">
