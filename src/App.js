@@ -1,10 +1,12 @@
-
+import Router from "./Env/Router";
+import CssBaseline from '@mui/material/CssBaseline';
 
 const App = () => {
   return (
-    <button>
-      로그인
-    </button>
+    <>
+      <CssBaseline />
+      <Router />
+    </>
   )
 }
 
