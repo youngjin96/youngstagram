@@ -7,7 +7,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 import { getDocs, query, collection, where } from "firebase/firestore";
 
-import {db} from "../../Env/Firebase";
+import { db } from "../../Env/Firebase";
 
 const Header = () => {
     const navigate = useNavigate();
@@ -19,12 +19,18 @@ const Header = () => {
      *  필드값이 일치하는 문서를 가져와 유저의 대표이미지를 불러온다.
      */
     useEffect(() => {
-        const q = query(collection(db, "users"), where("id", "==", id));
-        getDocs(q).then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                setUserImage(doc.data().image);
+        const image = sessionStorage.getItem("user_image");
+        if (image) {
+            setUserImage(image);
+        } else {
+            const q = query(collection(db, "users"), where("id", "==", id));
+            getDocs(q).then((querySnapshot) => {
+                querySnapshot.forEach((doc) => {
+                    sessionStorage.setItem("user_image", doc.data().image);
+                    setUserImage(doc.data().image);
+                });
             });
-        });
+        }
     }, []);
 
     /** 왼쪽 사진 클릭시 내 피드로 넘어가기 */
@@ -40,9 +46,9 @@ const Header = () => {
     return (
         <Grid container style={{ alignItems: "center", textAlign: "center", width: "80%", margin: "auto", marginTop: 70, top: 0, position: "sticky" }}>
             <Grid item xs={4}>
-                {userImage && 
-                    <IconButton onClick={onClickMyFeed} style={{padding: 0}}>
-                        <img src={userImage} style={{ width: 40, height: 40, borderRadius: "50%" }}/>
+                {userImage &&
+                    <IconButton onClick={onClickMyFeed} style={{ padding: 0 }}>
+                        <img src={userImage} style={{ width: 40, height: 40, borderRadius: "50%" }} />
                     </IconButton>
                 }
             </Grid>
@@ -54,7 +60,7 @@ const Header = () => {
                 </Typography>
             </Grid>
             <Grid item xs={4}>
-                <IconButton onClick={onClickCreateFeed} style={{padding: 0}}>
+                <IconButton onClick={onClickCreateFeed} style={{ padding: 0 }}>
                     <AddCircleIcon fontSize="large" color="primary" />
                 </IconButton>
             </Grid>

@@ -8,24 +8,24 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
 import { signOut } from "firebase/auth";
-import { getDocs, query, collection, where } from "firebase/firestore";
+// import { getDocs, query, collection, where } from "firebase/firestore";
 
 import { db, auth } from "../../Env/Firebase";
 
 const MyFeedHeader = () => {
     const navigate = useNavigate();
-    const id = sessionStorage.getItem("user_id");
-    const [userImage, setUserImage] = useState("");
+    // const id = sessionStorage.getItem("user_id");
+    const userImage = sessionStorage.getItem("user_image");
     const [anchorElNav, setAnchorElNav] = useState(null);
 
-    useEffect(() => {
-        const q = query(collection(db, "users"), where("id", "==", id));
-        getDocs(q).then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                setUserImage(doc.data().image);
-            });
-        });
-    }, []);
+    // useEffect(() => {
+    //     const q = query(collection(db, "users"), where("id", "==", id));
+    //     getDocs(q).then((querySnapshot) => {
+    //         querySnapshot.forEach((doc) => {
+    //             setUserImage(doc.data().image);
+    //         });
+    //     });
+    // }, []);
 
     /** 세팅 메뉴 오픈 */
     const handleOpenSetting = (event) => {
@@ -48,6 +48,7 @@ const MyFeedHeader = () => {
     const onClickLogout = () => {
         setAnchorElNav(null);
         signOut(auth).then(() => {
+            sessionStorage.clear();
             navigate("/");
         }).catch((error) => {
             alert(error.message);

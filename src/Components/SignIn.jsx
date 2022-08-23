@@ -108,10 +108,10 @@ const SignIn = () => {
                 <Grid item xs={12} style={{ marginTop: 40 }}>
                     <Button
                         variant="contained"
-                        style={{ width: 250, color: "white", height: 40 }}
+                        style={{ width: 250, color: "white", height: 40, backgroundColor: "#8821f0" }}
                         onClick={onClickSignIn}
                     >
-                        <Typography variant="subtitle1">
+                        <Typography variant="button" style={{fontSize: 20}}>
                             로그인
                         </Typography>
                     </Button>

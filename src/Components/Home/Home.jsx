@@ -1,13 +1,17 @@
-import { Grid } from "@mui/material";
 import { useEffect, useState } from "react";
+
+import { Grid } from "@mui/material";
 
 import Header from "./Header";
 
 const Home = () => {
-    const [userId, setUserId] = useState("");
-
+    
     useEffect(() => {
-        setUserId(sessionStorage.getItem("user_id"))
+        const uid = sessionStorage.getItem("user_id");
+        if (!uid) {
+            alert("로그인 후 이용해주세요.");
+            window.location.replace("/");
+        }
     }, []);
 
     return (

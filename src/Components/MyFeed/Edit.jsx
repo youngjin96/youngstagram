@@ -28,6 +28,11 @@ const Edit = () => {
         }
     }
 
+    /** 프로필 사진 변경 누를 시 유저는 원하는 사진을 고른다.
+     *  사진을 고르면 로딩 화면이 뜨고 Firebase Storage에 사진 저장
+     *  사진 저장된 url을 가져와서 로딩 화면 끄고 유저에게 바뀐 사진 먼저 보여준다.
+     *  그 후 users 테이블에 image 필드값 업데이트
+     */
     const onChangeImage = (e) => {
         setIsLoading(true);
         const storageRef = ref(storage, `/user_image/${e.target.files[0].name}`);
@@ -42,17 +47,21 @@ const Edit = () => {
                         updateDoc(userRef, {
                             image: url
                         });
+                        sessionStorage.setItem("user_image", url);
                     });
                 });
             });
         });
     }
 
+    /** 완료 버튼 누를 시 유저가 입력한 이름과 소개를 users 테이블에 업데이트 */
     const onClickComplete = () => {
         const q = query(collection(db, "users"), where("id", "==", id));
         getDocs(q).then(querySnapshot => {
             querySnapshot.forEach((document) => {
                 const userRef = doc(db, "users", document.id);
+                sessionStorage.setItem("user_name", name);
+                sessionStorage.setItem("user_introduce", introduce);
                 updateDoc(userRef, {
                     name: name,
                     introduce: introduce
