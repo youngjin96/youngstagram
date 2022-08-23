@@ -51,7 +51,9 @@ const SignUp = () => {
                         id: res._tokenResponse.localId,
                         email: email,
                         name: name,
-                        image: ""
+                        image: "https://firebasestorage.googleapis.com/v0/b/youngstagram-e6806.appspot.com/o/user_image%2F%E1%84%89%E1%85%B3%E1%84%8F%E1%85%B3%E1%84%85%E1%85%B5%E1%86%AB%E1%84%89%E1%85%A3%E1%86%BA%202022-08-23%20%E1%84%8B%E1%85%A9%E1%84%92%E1%85%AE%205.46.00.png?alt=media&token=6fc8a816-680b-4413-b84e-ba35ccfc240c",
+                        count_feed: 0,
+                        introduce: ""
                     }).then(() => {
                         setIsLoading(false);
                         Swal.fire({
@@ -65,7 +67,7 @@ const SignUp = () => {
                                 popup: 'animate__animated animate__fadeOutUp'
                             }
                         }).then(() => {
-                            sessionStorage.setItem("uid", res._tokenResponse.localId);
+                            sessionStorage.setItem("user_id", res._tokenResponse.localId);
                             navigate("/home");
                         });
                     });

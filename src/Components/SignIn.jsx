@@ -32,7 +32,6 @@ const SignIn = () => {
     const onClickSignIn = () => {
         setPersistence(auth, browserSessionPersistence).then(() => {
             return signInWithEmailAndPassword(auth, email, password).then((res) => {
-                console.log(res);
                 sessionStorage.setItem("user_id", res._tokenResponse.localId);
                 navigate("/home");
             }).catch(() => {
