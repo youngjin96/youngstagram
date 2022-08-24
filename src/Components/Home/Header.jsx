@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { Grid, Typography } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 
 import { getDocs, query, collection, where } from "firebase/firestore";
 
@@ -61,7 +61,7 @@ const Header = () => {
             </Grid>
             <Grid item xs={4}>
                 <IconButton onClick={onClickCreateFeed} style={{ padding: 0 }}>
-                    <AddCircleIcon fontSize="large" color="primary" />
+                    <AddPhotoAlternateIcon fontSize="large" color="primary" />
                 </IconButton>
             </Grid>
         </Grid>

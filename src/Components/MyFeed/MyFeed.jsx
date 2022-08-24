@@ -7,6 +7,7 @@ import { getDocs, query, collection, where } from "firebase/firestore";
 
 import { db } from "../../Env/Firebase";
 import EditHeader from "./MyFeedHeader";
+import MyFeedMain from "./MyFeedMain";
 
 const MyFeed = () => {
     const navigate = useNavigate();
@@ -80,9 +81,10 @@ const MyFeed = () => {
                 <Grid item xs={12} style={{ marginTop: 30 }}>
                     <Button variant="contained" onClick={onClickEdit} style={{ width: "60%", backgroundColor: "black", color: "white" }}>
                         프로필 편집
-                </Button>
+                    </Button>
                 </Grid>
             </Grid>
+            <MyFeedMain />
         </>
     )
 }

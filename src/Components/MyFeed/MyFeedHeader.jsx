@@ -6,8 +6,10 @@ import IconButton from '@mui/material/IconButton';
 import SettingsIcon from '@mui/icons-material/Settings';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 
 import { signOut } from "firebase/auth";
+
 // import { getDocs, query, collection, where } from "firebase/firestore";
 
 import { db, auth } from "../../Env/Firebase";
@@ -42,6 +44,10 @@ const MyFeedHeader = () => {
         navigate("/myFeed");
     }
 
+    const onClickCreateFeed = () => {
+        navigate("/createFeed");
+    }
+
     /** 오른쪽 설정 아이콘 클릭시 나오는 메뉴 중 로그아웃 버튼을 누르면
      *  로그아웃을 진행한 후 로그인 화면으로 넘어간다.
      */
@@ -72,6 +78,9 @@ const MyFeedHeader = () => {
                 </Typography>
             </Grid>
             <Grid item xs={4}>
+                <IconButton onClick={onClickCreateFeed}>
+                    <AddPhotoAlternateIcon fontSize="large" color="primary" />
+                </IconButton>
                 <IconButton
                     aria-controls="menu-appbar"
                     aria-haspopup="true"
