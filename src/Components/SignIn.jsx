@@ -47,9 +47,7 @@ const SignIn = () => {
                     }
                 });
             });
-        }).catch(r => {
-            console.log(r);
-        })
+        });
     }
 
     return (

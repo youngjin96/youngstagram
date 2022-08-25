@@ -1,11 +1,13 @@
 import { Route, Routes } from "react-router-dom";
+import {lazy} from "react"
 
-import Home from "../Components/Home/Home";
 import SignIn from "../Components/SignIn";
 import SignUp from "../Components/SignUp";
 import CreateFeed from "../Components/CreateFeed/CreateFeed";
 import MyFeed from "../Components/MyFeed/MyFeed";
 import Edit from "../Components/MyFeed/Edit";
+
+const Home = lazy(() => import('../Components/Home/Home'));
 
 const Router = () => {
     return (

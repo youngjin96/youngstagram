@@ -8,7 +8,7 @@ import { collection, query, where, getDocs, updateDoc, doc } from "firebase/fire
 
 import { storage, db } from "../../Env/Firebase";
 import Loader from "../../Env/Loader";
-import Header from "../Home/Header";
+import Header from "../Home/HomeHeader";
 
 const Edit = () => {
     const location = useLocation();
