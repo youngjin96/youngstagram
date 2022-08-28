@@ -2,17 +2,15 @@ import { Suspense, lazy } from "react";
 
 import Loader from "../../Env/Loader";
 
-const Header = lazy(() => import('./HomeHeader'));
 const HomeMain = lazy(() => import('./HomeMain'));
+const HomeHeader = lazy(() => import('./HomeHeader'));
 
 const Home = () => {
     return (
-        <>
-            <Suspense fallback={<Loader />}>
-                <Header />
-                <HomeMain />
-            </Suspense>
-        </>
+        <Suspense fallback={<Loader />}>
+            <HomeHeader />
+            <HomeMain />
+        </Suspense>
     )
 }
 

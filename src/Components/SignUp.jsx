@@ -6,7 +6,7 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 
 import Swal from 'sweetalert2';
 
-import { collection, addDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 
 import { auth, db } from "../Env/Firebase";
@@ -47,7 +47,7 @@ const SignUp = () => {
             setIsLoading(true);
             createUserWithEmailAndPassword(auth, email, password).then(async (res) => {
                 try {
-                    await addDoc(collection(db, "users"), {
+                    await setDoc(doc(db, "users", res._tokenResponse.localId), {
                         id: res._tokenResponse.localId,
                         email: email,
                         name: name,

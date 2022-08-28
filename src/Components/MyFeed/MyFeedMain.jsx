@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
-
-import { getDocs, query, collection, where } from "firebase/firestore";
+import { useQuery } from 'react-query';
 
 import { Grid } from "@mui/material";
 import Card from '@mui/material/Card';
@@ -13,46 +11,41 @@ import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
+import { getDocs, collection, query, where } from "firebase/firestore";
 import { db } from "../../Env/Firebase";
 
-import Loader from "../../Env/Loader";
+const fetchMyFeeds = async () => {
+    let feeds = [];
+    const q = query(collection(db, "feeds"), where("id", "==", sessionStorage.getItem("user_id")));
+    await getDocs(q).then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+            feeds.push(doc.data());
+        });
+    })
+    return feeds;
+}
 
 const MyFeedMain = () => {
-    const id = sessionStorage.getItem("user_id");
-    const [isLoading, setIsLoading] = useState(true);
-    const [feeds, setFeeds] = useState([]);
+    const { isLoading, data } = useQuery(["user_feeds"], fetchMyFeeds, {refetchOnWindowFocus: false});
 
-    useEffect(() => {
-        let feedsArr = [];
-        const q = query(collection(db, "feeds"), where("id", "==", id));
-        getDocs(q).then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-                feedsArr.push(doc.data());
-            });
-        }).then(() => {
-            setFeeds(feedsArr);
-            setIsLoading(false);
-        });
-    }, []);
-
-    if (isLoading) return <Loader />
+    if (isLoading) return <div>wait..</div>
 
     return (
         <Grid container spacing={3} style={{ alignItems: "center", width: "80%", margin: "auto", marginTop: 50 }}>
-            {feeds ? feeds.map((item, idx) => {
+            {data.map((item, idx) => {
                 return(
                     <Grid key={idx} item xs={12} sm={6} md={4}>
                         <Card sx={{ maxWidth: 345 }}>
                             <CardHeader
                                 avatar={
-                                    <Avatar src={sessionStorage.getItem("user_image")} />
+                                    <Avatar src={item.user_image} />
                                 }
                                 action={
                                     <IconButton>
                                         <MoreVertIcon />
                                     </IconButton>
                                 }
-                                title={sessionStorage.getItem("user_name")}
+                                title={item.name}
                                 subheader={item.time_stamp.toDate().toDateString()}
                             />
                             <CardMedia
@@ -73,7 +66,7 @@ const MyFeedMain = () => {
                         </Card>
                     </Grid>
                 )
-            }) : <div>게시물 없음</div>}
+            })}
         </Grid>
     )
 }

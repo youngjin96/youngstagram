@@ -1,4 +1,5 @@
-import { useQuery } from 'react-query';
+import {useState} from "react";
+import { useQuery } from "react-query";
 
 import { Grid } from "@mui/material";
 import Card from '@mui/material/Card';
@@ -11,40 +12,47 @@ import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import { getDocs, collection } from "firebase/firestore";
-import { db } from "../../Env/Firebase";
+import { auth, db } from "../../Env/Firebase";
 
-const fetchFeedData = async () => {
-    let dataArr = [];
-    await getDocs(collection(db, "feeds")).then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-            dataArr.push(doc.data());
-        });
-    })
-    return dataArr;
-}
+import Loader from "../../Env/Loader";
+
+import { allFeeds } from "./fetchHomeData";
+
+const resource = allFeeds();
+
+// const fetchAllFeeds = async () => {
+//     let feeds = [];
+//     await getDocs(collection(db, "feeds")).then((querySnapshot) => {
+//         querySnapshot.forEach((doc) => {
+//             feeds.push(doc.data());
+//         });
+//     });
+//     return feeds;
+// }
 
 const HomeMain = () => {
-    const { data } = useQuery("all_feeds", fetchFeedData, { 
-        suspense: true, 
-        refetchOnWindowFocus: false, 
-    });
+    const [data, setData] = useState(resource.read());
+    // const { data } = useQuery(["all_feeds"], fetchAllFeeds, {
+    //     refetchOnWindowFocus: false, 
+    //     suspense: true
+    // });
 
     return (
-        <Grid container spacing={2} style={{ alignItems: "center", width: "80%", margin: "auto", marginTop: 50 }}>
+        <Grid container spacing={2} style={{ alignItems: "center", width: "50%", margin: "auto", marginTop: 50 }}>
             {data.map((item, idx) => {
                 return (
                     <Grid key={idx} item xs={12}>
-                        <Card sx={{ width: "80%", margin: "auto" }}>
+                        <Card sx={{ width: "100%", margin: "auto" }}>
                             <CardHeader
                                 avatar={
                                     <Avatar src={item.user_image} />
                                 }
-                                title={item.user_name}
+                                title={item.name}
                                 subheader={item.time_stamp.toDate().toDateString()}
                             />
                             <CardMedia
                                 component="img"
-                                height="300"
+                                height="500"
                                 image={item.image}
                                 alt={item.name}
                                 style={{ width: "100%" }}

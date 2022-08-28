@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { Grid, Typography } from "@mui/material";
@@ -7,27 +7,17 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
 
 import { signOut } from "firebase/auth";
+import { auth } from "../../Env/Firebase";
 
-// import { getDocs, query, collection, where } from "firebase/firestore";
-
-import { db, auth } from "../../Env/Firebase";
+const userImage = sessionStorage.getItem("user_image");
 
 const MyFeedHeader = () => {
     const navigate = useNavigate();
-    // const id = sessionStorage.getItem("user_id");
-    const userImage = sessionStorage.getItem("user_image");
     const [anchorElNav, setAnchorElNav] = useState(null);
-
-    // useEffect(() => {
-    //     const q = query(collection(db, "users"), where("id", "==", id));
-    //     getDocs(q).then((querySnapshot) => {
-    //         querySnapshot.forEach((doc) => {
-    //             setUserImage(doc.data().image);
-    //         });
-    //     });
-    // }, []);
 
     /** 세팅 메뉴 오픈 */
     const handleOpenSetting = (event) => {
@@ -39,11 +29,12 @@ const MyFeedHeader = () => {
         setAnchorElNav(null);
     };
 
-    /** 왼쪽 사진 클릭시 내 피드로 넘어가기 */
+    /** 클릭 시 내 피드 페이지로 이동 */
     const onClickMyFeed = () => {
         navigate("/myFeed");
     }
 
+    /** 클릭 시 피드 생성 페이지로 이동 */
     const onClickCreateFeed = () => {
         navigate("/createFeed");
     }
@@ -62,13 +53,13 @@ const MyFeedHeader = () => {
     }
 
     return (
-        <Grid container style={{ alignItems: "center", textAlign: "center", width: "80%", margin: "auto", marginTop: 70, top: 0, position: "sticky" }}>
+        <Grid container style={{ alignItems: "center", textAlign: "center", width: "80%", margin: "auto", marginTop: 70 }}>
             <Grid item xs={4}>
-                {userImage &&
+                <Tooltip title="내 피드">
                     <IconButton onClick={onClickMyFeed} style={{ padding: 0 }}>
-                        <img src={userImage} style={{ width: 40, height: 40, borderRadius: "50%" }} />
+                        <Avatar src={userImage} />
                     </IconButton>
-                }
+                </Tooltip>
             </Grid>
             <Grid item xs={4}>
                 <Typography variant="h4">
@@ -78,17 +69,21 @@ const MyFeedHeader = () => {
                 </Typography>
             </Grid>
             <Grid item xs={4}>
-                <IconButton onClick={onClickCreateFeed}>
-                    <AddPhotoAlternateIcon fontSize="large" color="primary" />
-                </IconButton>
-                <IconButton
-                    aria-controls="menu-appbar"
-                    aria-haspopup="true"
-                    onClick={handleOpenSetting}
-                    style={{ padding: 0 }}
-                >
-                    <SettingsIcon fontSize="large" color="grey" />
-                </IconButton>
+                <Tooltip title="피드 작성">
+                    <IconButton onClick={onClickCreateFeed}>
+                        <AddPhotoAlternateIcon fontSize="large" color="primary" />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="환경설정">
+                    <IconButton
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        onClick={handleOpenSetting}
+                        style={{ padding: 0, marginLeft: 20 }}
+                    >
+                        <SettingsIcon fontSize="large" color="grey" />
+                    </IconButton>
+                </Tooltip>
                 <Menu
                     sx={{ mt: '45px' }}
                     id="menu-appbar"

@@ -4,17 +4,18 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { collection, query, where, getDocs, updateDoc, doc } from "firebase/firestore";
+import { collection, query, where, getDocs, updateDoc, doc, getDoc } from "firebase/firestore";
 
 import { storage, db } from "../../Env/Firebase";
 import Loader from "../../Env/Loader";
 import Header from "../Home/HomeHeader";
 
-const Edit = () => {
+const MyProfileEdit = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const id = sessionStorage.getItem("user_id");
     const [isLoading, setIsLoading] = useState(false);
+    const [file, setFile] = useState();
     const [name, setName] = useState(location.state.name);
     const [introduce, setIntroduce] = useState(location.state.introduce);
     const [userImage, setUserImage] = useState(location.state.userImage);
@@ -34,12 +35,19 @@ const Edit = () => {
      *  그 후 users 테이블에 image 필드값 업데이트
      */
     const onChangeImage = (e) => {
-        setIsLoading(true);
+        let file = e.target.files[0];
+        let reader = new FileReader();
+
+        reader.onloadend = (e) => {
+            setFile(file);
+            setUserImage(reader.result);
+        }
+
+        if (file) reader.readAsDataURL(file);
+
         const storageRef = ref(storage, `/user_image/${e.target.files[0].name}`);
-        uploadBytesResumable(storageRef, e.target.files[0]).then(() => {
+        uploadBytesResumable(storageRef, file).then(() => {
             getDownloadURL(storageRef).then((url) => {
-                setUserImage(url);
-                setIsLoading(false);
                 const q = query(collection(db, "users"), where("id", "==", id));
                 getDocs(q).then(querySnapshot => {
                     querySnapshot.forEach((document) => {
@@ -55,21 +63,12 @@ const Edit = () => {
     }
 
     /** 완료 버튼 누를 시 유저가 입력한 이름과 소개를 users 테이블에 업데이트 */
-    const onClickComplete = () => {
-        const q = query(collection(db, "users"), where("id", "==", id));
-        getDocs(q).then(querySnapshot => {
-            querySnapshot.forEach((document) => {
-                const userRef = doc(db, "users", document.id);
-                sessionStorage.setItem("user_name", name);
-                sessionStorage.setItem("user_introduce", introduce);
-                updateDoc(userRef, {
-                    name: name,
-                    introduce: introduce
-                }).then(() => {
-                    navigate("/myFeed");
-                });
-            });
+    const onClickComplete = async () => {
+        await updateDoc(doc(db, "users", sessionStorage.getItem("user_id")), {
+            name: name,
+            introduce: introduce
         });
+        navigate("/myFeed");
     }
 
     if (isLoading) return <Loader />
@@ -154,4 +153,4 @@ const Edit = () => {
     )
 }
 
-export default Edit;
+export default MyProfileEdit;
