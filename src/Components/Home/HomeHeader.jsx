@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { Grid, Typography } from "@mui/material";
@@ -12,23 +11,23 @@ import Avatar from '@mui/material/Avatar';
 import { signOut } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { auth, db } from "../../Env/Firebase";
-import { userImage } from "./fetchHomeData";
-
-const resource = userImage();
+import Loader from "../../Env/Loader";
+import { useImageStore } from "../../Env/store";
 
 const Header = () => {
-    const [data, setData] = useState(resource.read());
-
-    // const { data } = useQuery(["user_image"], resource.image.read(), {
-    //     suspense: true,
-    //     refetchOnWindowFocus: false,
-    //     useErrorBoundary: false,
-    //     onSuccess: data => {
-    //         sessionStorage.setItem("user_image", data);
-    //         console.log("success");
-    //     },
-    // });
+    const userImage = useImageStore((state) => state.userImage);
+    const setUserImage = useImageStore((state) => state.setUserImage);
     const navigate = useNavigate();
+    
+    useEffect(() => {
+        if (!userImage) {
+            getDoc(doc(db, "users", sessionStorage.getItem("user_id"))).then((res) => {
+                setUserImage(res.data().image);
+            })
+        }
+    }, []);
+
+    if (!userImage) return <Loader />
 
     /** 왼쪽 사진 클릭시 내 피드로 넘어가기 */
     const onClickMyFeed = () => {
@@ -40,6 +39,9 @@ const Header = () => {
         navigate("/createFeed");
     }
 
+    /** 로그아웃 기능
+     *  세션스토리지 클리어 후 로그인 페이지로 이동
+     */
     const onClickLogout = () => {
         signOut(auth).then(() => {
             sessionStorage.clear();
@@ -54,7 +56,7 @@ const Header = () => {
             <Grid item xs={4}>
                 <Tooltip title="내 피드">
                     <IconButton onClick={onClickMyFeed} style={{ padding: 0 }}>
-                        <Avatar src={data} />
+                        <Avatar src={userImage} alt="user_image" />
                     </IconButton>
                 </Tooltip>
             </Grid>

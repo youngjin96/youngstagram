@@ -2,6 +2,7 @@ import { getDoc, getDocs, collection, doc } from "firebase/firestore";
 import { db } from "../../Env/Firebase";
 
 export function userImage() {
+    console.log("fetch")
     let userImage = fetchUserImage();
     return wrapPromise(userImage);
 }
