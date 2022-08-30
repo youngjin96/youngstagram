@@ -12,22 +12,21 @@ import { signOut } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { auth, db } from "../../Env/Firebase";
 import Loader from "../../Env/Loader";
-import { useImageStore } from "../../Env/store";
+import { useHomeStore } from "../../Env/store";
 
 const Header = () => {
-    const userImage = useImageStore((state) => state.userImage);
-    const setUserImage = useImageStore((state) => state.setUserImage);
+    const { userInfo, setUserInfo } = useHomeStore();
     const navigate = useNavigate();
     
     useEffect(() => {
-        if (!userImage) {
+        if (!userInfo) {
             getDoc(doc(db, "users", sessionStorage.getItem("user_id"))).then((res) => {
-                setUserImage(res.data().image);
+                setUserInfo(res.data());
             })
         }
     }, []);
 
-    if (!userImage) return <Loader />
+    if (!userInfo) return <Loader />
 
     /** 왼쪽 사진 클릭시 내 피드로 넘어가기 */
     const onClickMyFeed = () => {
@@ -56,7 +55,7 @@ const Header = () => {
             <Grid item xs={4}>
                 <Tooltip title="내 피드">
                     <IconButton onClick={onClickMyFeed} style={{ padding: 0 }}>
-                        <Avatar src={userImage} alt="user_image" />
+                        <Avatar src={userInfo.image} alt="user_image" />
                     </IconButton>
                 </Tooltip>
             </Grid>

@@ -12,12 +12,11 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 
 import { getDocs, collection } from "firebase/firestore";
 import { db } from "../../Env/Firebase";
-import { useAllFeedStore } from "../../Env/store";
+import { useHomeStore } from "../../Env/store";
 import Loader from "../../Env/Loader";
 
 const HomeMain = () => {
-    const allFeed = useAllFeedStore((state) => state.allFeed);
-    const setAllFeed = useAllFeedStore((state) => state.setAllFeed);
+    const { allFeed, setAllFeed } = useHomeStore();
 
     useEffect(() => {
         let arr = [];

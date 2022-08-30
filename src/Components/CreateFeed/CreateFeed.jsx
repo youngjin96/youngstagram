@@ -11,10 +11,10 @@ import Swal from 'sweetalert2';
 import CreateFeedHeader from "./CreateFeedHeader";
 import Loader from "../../Env/Loader";
 import { db, storage } from "../../Env/Firebase";
-import { useImageStore } from "../../Env/store";
+import { useHomeStore } from "../../Env/store";
 
 const CreateFeed = () => {
-    const userImage = useImageStore((state) => state.userImage);
+    const { userInfo } = useHomeStore();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [file, setFile] = useState();
@@ -47,11 +47,11 @@ const CreateFeed = () => {
             getDownloadURL(storageRef).then((url) => {
                 addDoc(collection(db, "feeds"), {
                     id: sessionStorage.getItem("user_id"),
-                    name: sessionStorage.getItem("user_name"),
+                    name: userInfo.name,
                     image: url,
                     content: content,
                     time_stamp: serverTimestamp(),
-                    user_image: userImage
+                    user_image: userInfo.image
                 });
                 const q = query(collection(db, "users"), where("id", "==", sessionStorage.getItem("user_id")));
                 getDocs(q).then(querySnapshot => {
